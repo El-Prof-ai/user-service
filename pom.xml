@@ -48,6 +48,18 @@
             <artifactId>thymeleaf-extras-springsecurity3</artifactId>
             <version>3.0.5.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>21.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version> <!-- Vérifie si une version plus récente est disponible -->
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
 

@@ -1,8 +1,8 @@
 package com.bansikah.keycloakdemo.controller;
 
 import com.bansikah.keycloakdemo.service.keycloak.RolesServices;
+import lombok.AllArgsConstructor;
 import org.keycloak.representations.idm.RoleRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,43 +10,58 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/roles")
-public class RoleController {
+@AllArgsConstructor
+public class RolesController {
 
-    @Autowired
-    private RolesServices roleService;
+    private final RolesServices rolesServices;
 
-    // Create a new role
-    @PostMapping
-    public ResponseEntity<?> createRole(@RequestParam String roleName) {
-        roleService.createRole(roleName);
-        return ResponseEntity.ok("Role created successfully");
+    @PostMapping("/create")
+    public ResponseEntity<String> createRole(@RequestParam String roleName) {
+        try {
+            rolesServices.createRole(roleName);
+            return ResponseEntity.ok("Role created successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error creating role: " + e.getMessage());
+        }
     }
 
-    // Get all roles
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<String>> getAllRoles() {
-        List<String> roles = roleService.getAllRoles();
-        return ResponseEntity.ok(roles);
+        try {
+            List<String> roles = rolesServices.getAllRoles();
+            return ResponseEntity.ok(roles);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(List.of());
+        }
     }
 
-    // Get details of a specific role
     @GetMapping("/{roleName}")
     public ResponseEntity<RoleRepresentation> getRole(@PathVariable String roleName) {
-        RoleRepresentation role = roleService.getRole(roleName);
-        return ResponseEntity.ok(role);
+        try {
+            RoleRepresentation role = rolesServices.getRole(roleName);
+            return ResponseEntity.ok(role);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
-    // Update a role
-    @PutMapping("/{roleName}")
-    public ResponseEntity<?> updateRole(@PathVariable String roleName, @RequestParam String description) {
-        roleService.updateRole(roleName, description);
-        return ResponseEntity.ok("Role updated successfully");
+    @PutMapping("/update")
+    public ResponseEntity<String> updateRole(@RequestParam String roleName, @RequestParam String newDescription) {
+        try {
+            rolesServices.updateRole(roleName, newDescription);
+            return ResponseEntity.ok("Role updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error updating role: " + e.getMessage());
+        }
     }
 
-    // Delete a role
-    @DeleteMapping("/{roleName}")
-    public ResponseEntity<?> deleteRole(@PathVariable String roleName) {
-        roleService.deleteRole(roleName);
-        return ResponseEntity.ok("Role deleted successfully");
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteRole(@RequestParam String roleName) {
+        try {
+            rolesServices.deleteRole(roleName);
+            return ResponseEntity.ok("Role deleted successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error deleting role: " + e.getMessage());
+        }
     }
 }
